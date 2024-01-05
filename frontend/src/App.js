@@ -56,21 +56,36 @@ function App() {
   };
 
   const handleCategoryClick = (category) => {
-    if (selectedCategory === category) {
-      return;
-    }
     setSelectedCategory(category);
+
+    let apiUrl = `http://127.0.0.1:8010/api/noticias/${category}/`;
+
+
+    // Verifica si hay una categoría seleccionada
     if (category) {
-      axios.get(`http://127.0.0.1:8010/api/noticias/everything?q=${category}`)
+      // Asegúrate de que la categoría sea una de las opciones permitidas
+      const allowedCategories = ['business', 'sports', 'health', 'technology', 'entertainment'];
+
+      if (allowedCategories.includes(category)) {
+        apiUrl += `?category=${category}`;
+      } else {
+        console.error('Categoría no válida');
+        return;
+      }
+
+      // Realiza la solicitud a la API con la categoría seleccionada
+      axios.get(apiUrl)
         .then(response => {
           setSearchResults(response.data.articles);
         })
         .catch(error => {
           console.error('Error al obtener las noticias por categoría', error);
         });
+    } else {
+      // Si no hay categoría seleccionada, limpia los resultados de búsqueda
+      setSearchResults([]);
     }
   };
-    
 
   return (
     <ThemeProvider theme={theme}>
@@ -134,11 +149,11 @@ function App() {
             </Typography>
             <List>
               {[
-                { category: 'Política', icon: <PoliticsIcon /> },
-                { category: 'Deportes', icon: <SportsSoccerIcon/> },
-                { category: 'Salud', icon: <HealthIcon /> },
-                { category: 'Tecnología', icon: <TechnologyIcon /> },
-                { category: 'Vídeos', icon: <VideosIcon /> },
+                { category: 'business', icon: <PoliticsIcon /> },
+                { category: 'sports', icon: <SportsSoccerIcon /> },
+                { category: 'health', icon: <HealthIcon /> },
+                { category: 'technology', icon: <TechnologyIcon /> },
+                { category: 'entertainment', icon: <VideosIcon /> },
                 ].map(({ category, icon }) => (
                   <ListItemButton
                     onClick={() => handleCategoryClick(category)}
