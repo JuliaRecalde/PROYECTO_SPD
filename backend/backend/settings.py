@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'backend',
 ]
 
 NEWSAPI_KEY = 'b3cd3ee7f99e4f9fae3e85bfb2b2f448' 
@@ -84,9 +85,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_proyecto',
-        'USER': 'jrecalde',
-        'PASSWORD': 'Ropero-1',
+        'NAME': 'db_proyect',
+        'USER': 'root',
+        'PASSWORD': '1995',
         'HOST': 'localhost', 
         'PORT': '3306',       
     }
@@ -109,6 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'backend.CustomUser'
 
 
 # Internationalization

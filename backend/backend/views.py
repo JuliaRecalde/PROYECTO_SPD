@@ -1,6 +1,10 @@
 import requests
 from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 
 def obtener_noticias(request):
     api_key = 'b3cd3ee7f99e4f9fae3e85bfb2b2f448'
@@ -59,3 +63,7 @@ def obtener_noticias_por_categoria(request, category):
         return JsonResponse({'error': f'Error en la solicitud: {str(e)}'}, status=500)
     except Exception as e:
         return JsonResponse({'error': f'Error inesperado: {str(e)}'}, status=500)
+
+#agg nuevo
+def login_registro(request):
+    return render(request, 'login_registro.html')

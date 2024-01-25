@@ -3,8 +3,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItemText } from '@mui/material';
 import axios from 'axios';
 import "./App.css";
-import '@mui/material/styles';
-import '@mui/material';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -18,6 +16,7 @@ import TechnologyIcon from '@mui/icons-material/Devices';
 import VideosIcon from '@mui/icons-material/Movie';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
+import {  Link } from 'react-router-dom';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,7 +34,7 @@ function App() {
   };
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8010/api/noticias/everything/')
+    axios.get('http://127.0.0.1:8000/api/noticias/everything/')
       .then(response => {
         setSearchResults(response.data.articles);
       })
@@ -45,7 +44,7 @@ function App() {
   }, []);
 
   const handleSearch = () => {
-    axios.get(`http://127.0.0.1:8010/api/noticias/everything/?q=${searchTerm}`)
+    axios.get(`http://127.0.0.1:8000/api/noticias/everything/?q=${searchTerm}`)
       .then(response => {
         console.log('Datos de noticias:', response.data.articles);
         setSearchResults(response.data.articles);
@@ -58,21 +57,18 @@ function App() {
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
 
-    let apiUrl = `http://127.0.0.1:8010/api/noticias/${category}/`;
+    let apiUrl = `http://127.0.0.1:8000/api/noticias/${category}/`;
 
 
     // Verifica si hay una categoría seleccionada
     if (category) {
-      // Asegúrate de que la categoría sea una de las opciones permitidas
       const allowedCategories = ['business', 'sports', 'health', 'technology', 'entertainment'];
-
       if (allowedCategories.includes(category)) {
         apiUrl += `?category=${category}`;
       } else {
         console.error('Categoría no válida');
         return;
       }
-
       // Realiza la solicitud a la API con la categoría seleccionada
       axios.get(apiUrl)
         .then(response => {
@@ -135,7 +131,10 @@ function App() {
             <Typography variant="h6" component="div" style={{ flexGrow: 1, fontFamily: 'Work Sans, sans-serif' }}>
               Noticias Mundial
             </Typography>
-            <Button color="inherit"
+            <Button
+              component={Link}
+              to="/LoginTemplate" 
+              color="inherit"
               sx={{ '&:hover': { backgroundColor: '#F9AA33' }, '&.Mui-focusVisible': { backgroundColor: '#F9AA33' } }}
             >
               Login
