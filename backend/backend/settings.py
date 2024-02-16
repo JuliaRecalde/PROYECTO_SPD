@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_proyect',
-        'USER': 'root',
-        'PASSWORD': '1995',
+        'NAME': 'spd',
+        'USER': 'root2',
+        'PASSWORD': 'Ropero-1',
         'HOST': 'localhost', 
-        'PORT': '3306',       
+        'PORT': '3306',        
     }
 }
 
@@ -110,8 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-AUTH_USER_MODEL = 'backend.CustomUser'
 
 
 # Internationalization

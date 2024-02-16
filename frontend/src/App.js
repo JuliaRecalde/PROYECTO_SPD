@@ -16,7 +16,8 @@ import TechnologyIcon from '@mui/icons-material/Devices';
 import VideosIcon from '@mui/icons-material/Movie';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
-import {  Link } from 'react-router-dom';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import Grid from '@mui/material/Grid';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,6 +32,40 @@ function App() {
 
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
+  };
+
+  const handleSubscribe = (noticia) => {
+    console.log("noticiaurl:", noticia.url);
+    const correo = prompt('Ingresa tu correo electrónico para suscribirte a esta noticia:');
+    if (correo) {
+        const data = {
+            link: noticia.url,
+            correo: correo,
+        };
+        enviarDatosAlBackend(data);
+    }
+  };
+
+  const enviarDatosAlBackend = (data) => {
+    console.log(data);
+    fetch('http://127.0.0.1:8000/api/suscribirse/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Suscripción exitosa');
+            alert('¡Suscripción exitosa! Gracias por suscribirte.');
+        } else {
+            console.error('Error al suscribirse:', response.status);
+        }
+    })
+    .catch(error => {
+        console.error('Error al suscribirse:', error);
+    });
   };
 
   useEffect(() => {
@@ -52,15 +87,11 @@ function App() {
       .catch(error => {
         console.error('Error al buscar noticias', error);
       });
-  };
+  };  
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
-
     let apiUrl = `http://127.0.0.1:8000/api/noticias/${category}/`;
-
-
-    // Verifica si hay una categoría seleccionada
     if (category) {
       const allowedCategories = ['business', 'sports', 'health', 'technology', 'entertainment'];
       if (allowedCategories.includes(category)) {
@@ -69,7 +100,6 @@ function App() {
         console.error('Categoría no válida');
         return;
       }
-      // Realiza la solicitud a la API con la categoría seleccionada
       axios.get(apiUrl)
         .then(response => {
           setSearchResults(response.data.articles);
@@ -78,7 +108,6 @@ function App() {
           console.error('Error al obtener las noticias por categoría', error);
         });
     } else {
-      // Si no hay categoría seleccionada, limpia los resultados de búsqueda
       setSearchResults([]);
     }
   };
@@ -109,16 +138,34 @@ function App() {
           Buscar
         </Button>
       </div>
-      <ul style={{ marginTop: '30px'}}>
+      <ul style={{ marginTop: '30px' }}>
         {searchResults.map((noticia, index) => (
-          <li key={index} style={{ backgroundColor: '#f0f0f0', marginBottom: '10px', padding: '10px', borderRadius: '5px' }}>
-            <a href={noticia.url} target="_blank" rel="noopener noreferrer" style={{ color: '#333', textDecoration: 'none' }}>
-              {noticia.title}
-            </a>
+        <li key={index} style={{ backgroundColor: '#f0f0f0', marginBottom: '10px', padding: '10px', borderRadius: '5px' }}>
+            <Grid container alignItems="center">
+                <Grid item xs={10}>
+                    <a href={noticia.url} target="_blank" rel="noopener noreferrer" style={{ color: '#333', textDecoration: 'none' }}>
+                        {noticia.title}
+                    </a>
+                </Grid>
+                <Grid item xs={2}>
+                    <MarkEmailReadIcon
+                        onClick={() => handleSubscribe(noticia)}
+                        sx={{
+                            cursor: 'pointer',
+                            color: '#344955',
+                            fontSize: '2rem',
+                            transition: 'color 0.3s ease',
+                            '&:hover': {
+                                color: '#F9AA33'
+                            }
+                        }}
+                    />
+                </Grid>
+            </Grid>
             <p style={{ color: '#666' }}>Autor: {noticia.author}</p>
             <img src={noticia.urlToImage} alt={`Imagen de ${noticia.title}`} style={{ maxWidth: '100%', maxHeight: '200px' }} />
-          </li>
-        ))}
+        </li>
+      ))}
       </ul>
     </div>
         <AppBar position="static" style={{ background: '#344955', flexDirection: 'column', position: 'fixed', bottom: 0}}>
@@ -131,14 +178,7 @@ function App() {
             <Typography variant="h6" component="div" style={{ flexGrow: 1, fontFamily: 'Work Sans, sans-serif' }}>
               Noticias Mundial
             </Typography>
-            <Button
-              component={Link}
-              to="/LoginTemplate" 
-              color="inherit"
-              sx={{ '&:hover': { backgroundColor: '#F9AA33' }, '&.Mui-focusVisible': { backgroundColor: '#F9AA33' } }}
-            >
-              Login
-            </Button>
+            
           </Toolbar>
         </AppBar>
         <Drawer anchor="left" open={isDrawerOpen} onClose={handleDrawerClose} style={{ height: '100%', overflow: 'auto'}}>
@@ -172,13 +212,19 @@ function App() {
             </List>
             <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
               <IconButton>
-                <FacebookIcon/>
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                <FacebookIcon sx={{ '&:hover': { color: '#F9AA33' } }}/>
+              </a>
               </IconButton>
               <IconButton>
-                <TwitterIcon />
+              <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                <TwitterIcon sx={{ '&:hover': { color: '#F9AA33' } }}/>
+              </a> 
               </IconButton>
               <IconButton>
-                <InstagramIcon />
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                <InstagramIcon sx={{ '&:hover': { color: '#F9AA33' } }}/>
+              </a>  
               </IconButton>
             </div>
             <div style={{ wordWrap: 'break-word' }}>
